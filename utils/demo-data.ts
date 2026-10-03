@@ -3,8 +3,8 @@
  *
  * Builds four weeks of believable (completely made-up) logs plus the "memory"
  * the AI detective would have built up from them: suspects, confirmed findings,
- * day summaries and a few past reports. Yesterday's report is deliberately left
- * out, so opening the Report tab generates a real one from the sample logs.
+ * day summaries and past reports, including a hand-written one for yesterday.
+ * Visitors can still run the live AI on yesterday from the report screen.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -193,13 +193,30 @@ export async function loadDemoData(nowTs = Date.now()): Promise<void> {
 
   const detectiveSummaries = Object.fromEntries(summaries.map((s) => [s.dayIso, s]));
 
-  // Past reports for every day except yesterday, so yesterday's can be generated live.
+  // Every day gets a ready-made report. Yesterday's is hand-written so the demo
+  // opens on a good one; visitors can still run the live AI on it.
   const yesterdayIso = isoDay(today.getTime() - DAY_MS);
-  const reportCache = Object.fromEntries(
-    summaries.filter((s) => s.dayIso !== yesterdayIso).map((s) => [s.dayIso, cannedReport(s)])
+  const reportCache: Record<string, unknown> = Object.fromEntries(
+    summaries.map((s) => [s.dayIso, cannedReport(s)])
   );
-  // Yesterday's summary should come from the live report, not the seed.
-  delete (detectiveSummaries as Record<string, unknown>)[yesterdayIso];
+  reportCache[yesterdayIso] = {
+    headline: 'The Gut Check',
+    body:
+      "Moderate chest pain at 18:20 came about an hour after last night's chicken tikka masala, eaten while slouched on the sofa. " +
+      'Spicy food now has 7 occurrences and my confidence is climbing, though I need to know how hot the curry was before I call it. ' +
+      'Your morning coffee was small and sat comfortably, which is good news for your safe list.',
+    detectiveLog: [
+      'Greek yoghurt at breakfast and the chicken and rice at lunch (eaten upright, well timed) caused no trouble at all.',
+      'The evening is where things unravelled: curry at 17:15, a slouched posture and symptoms by 18:20. Posture plus spice is a classic double hit.',
+      'I have moved spicy foods up the suspect list, and I am holding off on a verdict until I hear how hot the curry was.',
+    ],
+    strategy: [
+      'Eat the evening meal earlier and sit upright for an hour afterwards',
+      'Try the same curry mild next time, to test whether the heat or the posture is the trigger',
+      'Keep coffee small and with food',
+    ],
+    needMoreInfo: { question: 'Was the curry mild or hot?' },
+  };
 
   const pollenHistory = summaries.map((s) => {
     const p = demoPollenForDay(new Date(`${s.dayIso}T12:00:00`).getTime());

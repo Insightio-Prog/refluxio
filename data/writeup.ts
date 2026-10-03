@@ -94,10 +94,10 @@ export const SCREEN_NOTES: Array<{ match: (path: string) => boolean; note: Scree
     match: (p) => p.includes('report'),
     note: {
       title: 'Daily report',
-      body: 'Claude reads yesterday\'s logs against the suspect list and writes a short report. This is the live AI part.',
+      body: 'Each morning Claude reads yesterday\'s logs against the suspect list and writes a short report. Yesterday\'s is ready to read.',
       tips: [
-        'It takes around 20 seconds.',
-        'Each visitor gets a few reports a day, so please use them wisely.',
+        'Scroll down and tap "Run the live AI detective" to have Claude write a fresh one (about 20 seconds).',
+        'Each visitor gets a few live reports a day, so please use them wisely.',
       ],
     },
   },

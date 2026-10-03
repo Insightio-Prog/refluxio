@@ -17,10 +17,10 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { REPO_URL } from '@/data/writeup';
 import { confirmDialog } from '@/utils/dialog';
 import { resetApp } from '@/services/storage-service';
 import DoctorPdfModal from '@/components/DoctorPdfModal';
-import { LOGO_FONT_LIGHT, LOGO_FONT_STRONG } from '@/constants/fonts';
 import { APP_RADIUS } from '@/constants/theme';
 
 const HEADER_DARK = '#0f172a';
@@ -143,7 +143,7 @@ export default function UserSettingsScreen() {
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="light-content" backgroundColor={HEADER_DARK} />
+      <StatusBar barStyle="dark-content" backgroundColor={BG} />
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <Pressable
           onPress={() => {
@@ -153,19 +153,11 @@ export default function UserSettingsScreen() {
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          style={({ pressed }) => [styles.backBtn, { top: insets.top + 12, opacity: pressed ? 0.7 : 1 }]}
+          style={({ pressed }) => [styles.backBtn, { opacity: pressed ? 0.7 : 1 }]}
         >
-          <Ionicons name="chevron-back" size={22} color="#fff" />
+          <Ionicons name="chevron-back" size={22} color={HEADER_DARK} />
         </Pressable>
-
-        <View style={styles.brandLockup} pointerEvents="none">
-          <Text style={styles.brandTitle} accessibilityRole="header">
-            <Text style={styles.brandTitleStrong}>Reflux</Text>
-            <Text style={styles.brandTitleLight}>io</Text>
-          </Text>
-          <Text style={styles.brandTagline}>TRACK · IDENTIFY · HEAL</Text>
-        </View>
-
+        <Text style={styles.headerTitle} accessibilityRole="header">SETTINGS</Text>
         <View style={styles.headerSideSpacer} />
       </View>
 
@@ -249,11 +241,11 @@ export default function UserSettingsScreen() {
         <View style={styles.card}>
           <Text style={styles.sectionKicker}>ABOUT</Text>
           <SettingsRow
-            icon="shield-outline"
-            label="Privacy Policy"
+            icon="logo-github"
+            label="View source on GitHub"
             onPress={() => {
               void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              void Linking.openURL('https://insightio.co.uk/privacy');
+              void Linking.openURL(REPO_URL);
             }}
           />
           <View style={styles.rowDivider} />
@@ -261,7 +253,7 @@ export default function UserSettingsScreen() {
             icon="information-circle-outline"
             label="App Version"
             showChevron={false}
-            right={<Text style={styles.versionLabel}>1.0.0 (beta)</Text>}
+            right={<Text style={styles.versionLabel}>Demo</Text>}
           />
         </View>
       </ScrollView>
@@ -271,40 +263,29 @@ export default function UserSettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: HEADER_DARK },
+  root: { flex: 1, backgroundColor: BG },
   header: {
-    backgroundColor: HEADER_DARK,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 14,
+    paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: BORDER,
+    backgroundColor: BG,
   },
   headerSideSpacer: { width: 40, height: 40 },
   backBtn: {
-    position: 'absolute',
-    left: 16,
     width: 40,
     height: 40,
     borderRadius: APP_RADIUS,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    backgroundColor: 'rgba(255,255,255,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 10,
+    borderWidth: 1,
+    borderColor: BORDER,
+    backgroundColor: '#fff',
   },
-  brandLockup: { alignItems: 'center', flex: 1 },
-  brandTitle: { fontSize: 34, color: '#fff', letterSpacing: -0.8, lineHeight: 36 },
-  brandTitleStrong: { fontFamily: LOGO_FONT_STRONG },
-  brandTitleLight: { fontFamily: LOGO_FONT_LIGHT, color: '#2d6a4f' },
-  brandTagline: {
-    fontFamily: 'OutfitBlack',
-    fontSize: 11,
-    color: 'rgba(255,255,255,0.6)',
-    letterSpacing: 3,
-    marginTop: 8,
-  },
+  headerTitle: { fontFamily: 'OutfitBlack', fontSize: 12, letterSpacing: 1.2, color: HEADER_DARK },
   scroll: { flex: 1, backgroundColor: BG },
   scrollContent: { paddingTop: 20 },
   card: {

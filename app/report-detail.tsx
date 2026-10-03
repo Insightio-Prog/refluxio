@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import AppModal from '@/components/AppModal';
 
+import { IS_DEMO } from '@/constants/demo';
 import { generateDailyReportStreaming, GeminiOverwhelmedError } from '@/services/ai-service';
 import { getLastMonthlyReview, type MonthlyReviewReport } from '@/services/monthly-agent';
 import { getYesterdayISO } from '@/utils/date-utils';
@@ -743,6 +744,32 @@ export default function ReportDetailScreen() {
               <Ionicons name="search-outline" size={16} color={DARK} />
               <Text style={styles.detectiveBtnText}>VIEW PATTERNS</Text>
             </Pressable>
+
+            {IS_DEMO && viewingDayIso === getYesterdayISO() && !loadingReport ? (
+              <Pressable
+                onPress={() => {
+                  void (async () => {
+                    try {
+                      const raw = await AsyncStorage.getItem(DAILY_REPORT_CACHE_KEY);
+                      const map = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
+                      delete map[getYesterdayISO()];
+                      await AsyncStorage.setItem(DAILY_REPORT_CACHE_KEY, JSON.stringify(map));
+                    } catch {
+                      // ignore
+                    }
+                    setReport(null);
+                    setAutoGenerateAttempted(false);
+                    setRetryNonce((n) => n + 1);
+                  })();
+                }}
+                accessibilityRole="button"
+                accessibilityLabel="Run the live AI detective on yesterday"
+                style={({ pressed }) => [styles.detectiveBtn, { marginTop: 10, opacity: pressed ? 0.88 : 1 }]}
+              >
+                <Ionicons name="sparkles-outline" size={16} color={DARK} />
+                <Text style={styles.detectiveBtnText}>RUN THE LIVE AI DETECTIVE</Text>
+              </Pressable>
+            ) : null}
 
             {monthlyReview && (
               <View style={styles.monthlyCard}>

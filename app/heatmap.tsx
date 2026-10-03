@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import AppModal from '@/components/AppModal';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
@@ -447,7 +447,7 @@ export default function HeatmapScreen() {
         </View>
       </View>
 
-      <GestureDetector gesture={tabSwipeGesture}>
+      <SwipeWrap gesture={tabSwipeGesture}>
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={[styles.scrollContent, { paddingBottom: 16 + insets.bottom + 80 }]}
@@ -1076,7 +1076,7 @@ export default function HeatmapScreen() {
           </View>
         ) : null}
         </ScrollView>
-      </GestureDetector>
+      </SwipeWrap>
 
       <AppModal
         visible={showOverviewInfo}
@@ -1497,6 +1497,12 @@ export default function HeatmapScreen() {
       <BottomSafeAreaShield />
     </View>
   );
+}
+
+// On web the pan handler sets touch-action:none and blocks native touch scrolling, so only wrap on native.
+function SwipeWrap({ gesture, children }: { gesture: ReturnType<typeof Gesture.Pan>; children: React.ReactElement }) {
+  if (Platform.OS === 'web') return children;
+  return <GestureDetector gesture={gesture}>{children}</GestureDetector>;
 }
 
 const styles = StyleSheet.create({

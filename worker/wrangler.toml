@@ -3,7 +3,9 @@ main = "worker.js"
 compatibility_date = "2025-01-01"
 
 # Create a KV namespace (wrangler kv namespace create LIMITS) and paste its id here.
-kv_namespaces = [{ binding = "LIMITS", id = "REPLACE_WITH_KV_ID" }]
+kv_namespaces = [{ binding = "LIMITS", id = "e59fe91dfc814132b4b5b5aca0182b75" }]
+
+routes = [{ pattern = "refluxio-demo-api.insightio.co.uk", custom_domain = true }]
 
 [vars]
 ALLOWED_ORIGINS = "https://refluxio.insightio.co.uk"

@@ -4,7 +4,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import AppModal from '@/components/AppModal';
 
 import { generateDailyReportStreaming, GeminiOverwhelmedError } from '@/services/ai-service';
 import { getLastMonthlyReview, type MonthlyReviewReport } from '@/services/monthly-agent';
@@ -841,7 +842,7 @@ export default function ReportDetailScreen() {
         </ScrollView>
       )}
 
-      <Modal visible={answerModalOpen} transparent animationType="fade" onRequestClose={closeAnswerModal}>
+      <AppModal visible={answerModalOpen} transparent animationType="fade" onRequestClose={closeAnswerModal}>
         <View style={styles.answerBackdrop}>
           {Platform.OS === 'ios' ? (
             <BlurView intensity={24} tint="dark" style={StyleSheet.absoluteFillObject} />
@@ -894,9 +895,9 @@ export default function ReportDetailScreen() {
             </Pressable>
           </KeyboardAvoidingView>
         </View>
-      </Modal>
+      </AppModal>
 
-      <Modal visible={sleepModalOpen} transparent animationType="slide" onRequestClose={handleSleepSkip}>
+      <AppModal visible={sleepModalOpen} transparent animationType="slide" onRequestClose={handleSleepSkip}>
         <View style={styles.answerBackdrop}>
           {Platform.OS === 'ios' ? (
             <BlurView intensity={24} tint="dark" style={StyleSheet.absoluteFillObject} />
@@ -915,7 +916,7 @@ export default function ReportDetailScreen() {
                 <TextInput
                   value={sleepBedtime}
                   onChangeText={setSleepBedtime}
-                  placeholder="Bedtime (e.g. 23:00)"
+                  placeholder="Bedtime, e.g. 23:00"
                   placeholderTextColor="#94a3b8"
                   keyboardType="numeric"
                   style={styles.sleepTimeInput}
@@ -923,7 +924,7 @@ export default function ReportDetailScreen() {
                 <TextInput
                   value={sleepWakeTime}
                   onChangeText={setSleepWakeTime}
-                  placeholder="Wake time (e.g. 07:00)"
+                  placeholder="Wake, e.g. 07:00"
                   placeholderTextColor="#94a3b8"
                   keyboardType="numeric"
                   style={styles.sleepTimeInput}
@@ -967,7 +968,7 @@ export default function ReportDetailScreen() {
             </Pressable>
           </KeyboardAvoidingView>
         </View>
-      </Modal>
+      </AppModal>
 
       <BottomSafeAreaShield />
     </View>
@@ -1311,7 +1312,7 @@ const styles = StyleSheet.create({
 
   sleepTimeRow: { marginTop: 12, flexDirection: 'row', gap: 10 },
   sleepTimeInput: {
-    flex: 1,
+    flex: 1, minWidth: 0,
     height: 44,
     borderWidth: 1,
     borderColor: BORDER,

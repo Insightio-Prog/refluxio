@@ -10,22 +10,8 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import React, { useMemo, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  Keyboard,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView as RNScrollView,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView as RNScrollView, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import AppModal from '@/components/AppModal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IS_DEMO } from '@/constants/demo';
@@ -942,7 +928,7 @@ export default function ScannerScreen() {
         </View>
       ) : null}
 
-      <Modal
+      <AppModal
         visible={Boolean(pendingScan)}
         transparent
         animationType="fade"
@@ -1101,9 +1087,9 @@ export default function ScannerScreen() {
             </Pressable>
           </KeyboardAvoidingView>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={Boolean(inspectLog)}
         transparent
         animationType="fade"
@@ -1216,9 +1202,9 @@ export default function ScannerScreen() {
             </View>
           </Pressable>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={Boolean(quickSaveLog)}
         transparent
         animationType="fade"
@@ -1310,7 +1296,7 @@ export default function ScannerScreen() {
             </View>
           </Pressable>
         </Pressable>
-      </Modal>
+      </AppModal>
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}

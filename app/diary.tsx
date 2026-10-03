@@ -4,18 +4,8 @@ import * as Haptics from 'expo-haptics';
 import * as Clipboard from 'expo-clipboard';
 import { router, Stack } from 'expo-router';
 import React, { useMemo, useRef, useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import AppModal from '@/components/AppModal';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -343,7 +333,7 @@ If you have questions about any entry or need clarification, please ask.`.trim()
     <SafeAreaView style={[styles.safe, { paddingTop: 0 }]}>
       <Stack.Screen options={{ headerShown: false }} />
 
-      <Modal visible={editModalOpen} transparent animationType="fade" onRequestClose={closeEditModal}>
+      <AppModal visible={editModalOpen} transparent animationType="fade" onRequestClose={closeEditModal}>
         <Pressable style={styles.modalBackdrop} onPress={closeEditModal}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -401,9 +391,9 @@ If you have questions about any entry or need clarification, please ask.`.trim()
             </Pressable>
           </KeyboardAvoidingView>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal visible={noteModalOpen} transparent animationType="fade" onRequestClose={closeNoteModal}>
+      <AppModal visible={noteModalOpen} transparent animationType="fade" onRequestClose={closeNoteModal}>
         <View style={styles.noteBackdrop}>
           {Platform.OS === 'ios' ? (
             <BlurView intensity={24} tint="dark" style={StyleSheet.absoluteFillObject} />
@@ -470,7 +460,7 @@ If you have questions about any entry or need clarification, please ask.`.trim()
             </Pressable>
           </KeyboardAvoidingView>
         </View>
-      </Modal>
+      </AppModal>
       
       <View style={[styles.newHeader, { paddingTop: insets.top + 12 }]}>
         <Text style={styles.newHeaderSub}>

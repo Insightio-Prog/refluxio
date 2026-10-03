@@ -10,20 +10,8 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  AppState,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { AppState, KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
+import AppModal from '@/components/AppModal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LOGO_FONT_LIGHT, LOGO_FONT_STRONG } from '@/constants/fonts';
@@ -1045,7 +1033,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      <Modal visible={isSymptomLogModalOpen} transparent animationType="fade" onRequestClose={closeSymptomLogModal}>
+      <AppModal visible={isSymptomLogModalOpen} transparent animationType="fade" onRequestClose={closeSymptomLogModal}>
         <Pressable style={styles.modalBackdrop} onPress={closeSymptomLogModal}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -1128,9 +1116,9 @@ export default function HomeScreen() {
             </Pressable>
           </KeyboardAvoidingView>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={Boolean(quickEditTarget)}
         transparent
         animationType="fade"
@@ -1199,9 +1187,9 @@ export default function HomeScreen() {
             </Pressable>
           </KeyboardAvoidingView>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal visible={isMedModalOpen} transparent animationType="fade" onRequestClose={closeMedModal}>
+      <AppModal visible={isMedModalOpen} transparent animationType="fade" onRequestClose={closeMedModal}>
         <Pressable style={styles.modalBackdrop} onPress={closeMedModal}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -1276,9 +1264,9 @@ export default function HomeScreen() {
             </Pressable>
           </KeyboardAvoidingView>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={Boolean(envInfoItem)}
         transparent
         animationType="fade"
@@ -1336,9 +1324,9 @@ export default function HomeScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={Boolean(symptomInfoItem)}
         transparent
         animationType="fade"
@@ -1396,9 +1384,9 @@ export default function HomeScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={isSymptomModalOpen}
         transparent
         animationType="fade"
@@ -1471,7 +1459,7 @@ export default function HomeScreen() {
             </Pressable>
           </KeyboardAvoidingView>
         </Pressable>
-      </Modal>
+      </AppModal>
 
       <BottomSheetModal
         ref={moodSheetRef}

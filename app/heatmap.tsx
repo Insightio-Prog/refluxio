@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import AppModal from '@/components/AppModal';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -1077,7 +1078,7 @@ export default function HeatmapScreen() {
         </ScrollView>
       </GestureDetector>
 
-      <Modal
+      <AppModal
         visible={showOverviewInfo}
         transparent
         animationType="fade"
@@ -1121,9 +1122,9 @@ export default function HeatmapScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={showTimeOfDayInfo}
         transparent
         animationType="fade"
@@ -1167,9 +1168,9 @@ export default function HeatmapScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={showIngredientInfo}
         transparent
         animationType="fade"
@@ -1217,9 +1218,9 @@ export default function HeatmapScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={showMedInfo}
         transparent
         animationType="fade"
@@ -1267,9 +1268,9 @@ export default function HeatmapScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={showPatternInfo}
         transparent
         animationType="fade"
@@ -1317,9 +1318,9 @@ export default function HeatmapScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={showPollenTrendInfo}
         transparent
         animationType="fade"
@@ -1391,9 +1392,9 @@ export default function HeatmapScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={showHighPollenInfo}
         transparent
         animationType="fade"
@@ -1441,9 +1442,9 @@ export default function HeatmapScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
-      <Modal
+      <AppModal
         visible={showMonthlyPatternInfo}
         transparent
         animationType="fade"
@@ -1491,7 +1492,7 @@ export default function HeatmapScreen() {
             </Pressable>
           </View>
         </Pressable>
-      </Modal>
+      </AppModal>
 
       <BottomSafeAreaShield />
     </View>

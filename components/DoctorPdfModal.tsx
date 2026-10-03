@@ -16,17 +16,8 @@
  */
 
 import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import AppModal from '@/components/AppModal';
 import * as Haptics from 'expo-haptics';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
@@ -133,7 +124,7 @@ export default function DoctorPdfModal({ visible, onClose }: Props) {
   const preset = RANGE_PRESETS[selectedPreset];
 
   return (
-    <Modal
+    <AppModal
       visible={visible}
       animationType="slide"
       presentationStyle="pageSheet"
@@ -269,7 +260,7 @@ export default function DoctorPdfModal({ visible, onClose }: Props) {
           )}
         </ScrollView>
       </View>
-    </Modal>
+    </AppModal>
   );
 }
 

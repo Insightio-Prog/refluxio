@@ -286,5 +286,33 @@ export async function loadDemoData(nowTs = Date.now()): Promise<void> {
     ['heartburn.onboardingNote.v1', 'Sample user: 40s, reflux mostly in the evenings, trying to work out which foods and habits set it off.'],
     ['heartburn.firstUseDate.v1', firstUse.toISOString()],
     ['heartburn.hasCompletedOnboarding.v1', 'true'],
+    [DEMO_SEED_DAY_KEY, isoDay(today.getTime())],
   ]);
+}
+
+const DEMO_SEED_DAY_KEY = 'refluxio.demoSeedDay.v1';
+
+/**
+ * Keep the public demo healthy for returning visitors: if the app is marked as
+ * set up but its sample data is missing, empty, or from a previous day (the
+ * "yesterday" report would be wrong), load it again.
+ */
+export async function ensureDemoData(nowTs = Date.now()): Promise<boolean> {
+  try {
+    const [[, logsRaw], [, seedDay]] = await AsyncStorage.multiGet(['heartburnDiary.logs.v1', DEMO_SEED_DAY_KEY]);
+    let count = 0;
+    try {
+      const parsed = logsRaw ? JSON.parse(logsRaw) : [];
+      count = Array.isArray(parsed) ? parsed.length : 0;
+    } catch {
+      count = 0;
+    }
+    const d = new Date(nowTs);
+    d.setHours(0, 0, 0, 0);
+    if (count > 0 && seedDay === isoDay(d.getTime())) return false;
+    await loadDemoData(nowTs);
+    return true;
+  } catch {
+    return false;
+  }
 }

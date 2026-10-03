@@ -10,6 +10,8 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
+import { IS_DEMO } from '@/constants/demo';
+import { ensureDemoData } from '@/utils/demo-data';
 import PhoneFrame from '@/components/PhoneFrame';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -46,8 +48,8 @@ export default function RootLayout() {
     (async () => {
       try {
         const raw = await AsyncStorage.getItem(HAS_COMPLETED_ONBOARDING_KEY);
-console.log('Onboarding key value:', raw);
 const completed = raw === 'true';
+        if (completed && IS_DEMO) await ensureDemoData();
         if (!cancelled) setInitialRoute(completed ? '(tabs)' : 'onboarding-triggers');
       } catch {
         if (!cancelled) setInitialRoute('onboarding-triggers');

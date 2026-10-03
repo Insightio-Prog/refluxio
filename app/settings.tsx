@@ -1,9 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BottomSafeAreaShield } from '@/components/bottom-safe-area-shield';
@@ -12,6 +10,7 @@ import { APP_RADIUS } from '@/constants/theme';
 import { clearDailyReportCache } from '@/services/ai-service';
 import { runMonthlyReview, shouldRunMonthlyReview } from '@/services/monthly-agent';
 import { resetApp } from '@/services/storage-service';
+import { confirmDialog, notify } from '@/utils/dialog';
 
 const BG = '#f8fafc';
 const DARK = '#0f172a';
@@ -24,135 +23,41 @@ const KEY_CACHE = 'heartburn.dailyReportCache.v1';
 
 const MONO = Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' });
 
-type MemoryRow =
-  | { key: string; kind: 'empty' }
-  | { key: string; kind: 'invalid'; raw: string }
-  | { key: string; kind: 'ok'; summary: string; json: string };
-
-function isoDateKeys(obj: Record<string, unknown>): string[] {
-  return Object.keys(obj)
-    .filter((k) => /^\d{4}-\d{2}-\d{2}$/.test(k))
-    .sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
-}
-
-function rowFromStorageKey(storageKey: string, raw: string | null): MemoryRow {
-  if (raw == null || !String(raw).trim()) {
-    return { key: storageKey, kind: 'empty' };
-  }
-  const trimmed = raw.trim();
-  try {
-    const parsed = JSON.parse(trimmed) as unknown;
-
-    if (storageKey === KEY_PENDING) {
-      const items =
-        parsed && typeof parsed === 'object' && !Array.isArray(parsed) && Array.isArray((parsed as { items?: unknown }).items)
-          ? ((parsed as { items: unknown[] }).items ?? [])
-          : [];
-      const n = items.length;
-      return {
-        key: storageKey,
-        kind: 'ok',
-        summary: `${n} ${n === 1 ? 'item' : 'items'} being investigated`,
-        json: JSON.stringify(parsed, null, 2),
-      };
-    }
-
-    if (storageKey === KEY_TRIGGERS) {
-      const list = Array.isArray(parsed) ? parsed : [];
-      const n = list.length;
-      return {
-        key: storageKey,
-        kind: 'ok',
-        summary: `${n} suspect${n === 1 ? '' : 's'}`,
-        json: JSON.stringify(parsed, null, 2),
-      };
-    }
-
-    if (storageKey === KEY_CACHE) {
-      const obj =
-        parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as Record<string, unknown>) : null;
-      const dates = obj ? isoDateKeys(obj) : [];
-      const summary =
-        dates.length === 0
-          ? 'No dated report entries in cache object'
-          : `Cached reports: ${dates.join(', ')}`;
-      return {
-        key: storageKey,
-        kind: 'ok',
-        summary,
-        json: JSON.stringify(parsed, null, 2),
-      };
-    }
-
-    return { key: storageKey, kind: 'ok', summary: '', json: JSON.stringify(parsed, null, 2) };
-  } catch {
-    return { key: storageKey, kind: 'invalid', raw: trimmed };
-  }
-}
-
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
   const [isResetting, setIsResetting] = useState(false);
   const [isClearingReportCache, setIsClearingReportCache] = useState(false);
   const [runningMonthly, setRunningMonthly] = useState(false);
   const [monthlyDone, setMonthlyDone] = useState(false);
-  const [memoryRows, setMemoryRows] = useState<MemoryRow[]>([]);
-  const [loadingMemory, setLoadingMemory] = useState(false);
-
-  const loadAiMemory = useCallback(async () => {
-    setLoadingMemory(true);
-    try {
-      const entries = await AsyncStorage.multiGet([KEY_PENDING, KEY_TRIGGERS, KEY_CACHE]);
-      const map = Object.fromEntries(entries) as Record<string, string | null>;
-      setMemoryRows([
-        rowFromStorageKey(KEY_PENDING, map[KEY_PENDING] ?? null),
-        rowFromStorageKey(KEY_TRIGGERS, map[KEY_TRIGGERS] ?? null),
-        rowFromStorageKey(KEY_CACHE, map[KEY_CACHE] ?? null),
-      ]);
-    } finally {
-      setLoadingMemory(false);
-    }
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      void loadAiMemory();
-    }, [loadAiMemory]),
-  );
 
   const confirmReset = () => {
     if (isResetting) return;
 
-    Alert.alert(
-      'Reset App?',
-      'This will clear all saved data on this device (logs, suspects, cached reports, and onboarding).',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Reset',
-          style: 'destructive',
-          onPress: () => {
-            void (async () => {
-              try {
-                setIsResetting(true);
-                await resetApp();
-                if (Platform.OS === 'web') {
-                  window.location.assign('/');
-                } else {
-                  router.replace('/onboarding-triggers');
-                  Alert.alert('Reset complete', 'Data cleared.');
-                }
-              } catch (e) {
-                console.error('[settings] reset failed:', e);
-                Alert.alert('Reset failed', 'Could not clear storage. Please try again.');
-              } finally {
-                setIsResetting(false);
-              }
-            })();
-          },
-        },
-      ]
-    );
+    confirmDialog({
+      title: 'Reset app?',
+      message: 'This will clear all saved data on this device (logs, suspects, cached reports, and onboarding).',
+      confirmLabel: 'Reset',
+      destructive: true,
+      onConfirm: () => {
+        void (async () => {
+          try {
+            setIsResetting(true);
+            await resetApp();
+            if (Platform.OS === 'web') {
+              window.location.assign('/');
+            } else {
+              router.replace('/onboarding-triggers');
+              notify('Reset complete', 'Data cleared.');
+            }
+          } catch (e) {
+            console.error('[settings] reset failed:', e);
+            notify('Reset failed', 'Could not clear storage. Please try again.');
+          } finally {
+            setIsResetting(false);
+          }
+        })();
+      },
+    });
   };
 
   const clearReportCache = () => {
@@ -161,13 +66,10 @@ export default function SettingsScreen() {
       try {
         setIsClearingReportCache(true);
         await clearDailyReportCache();
-        Alert.alert(
-          'Storage cleared',
-          'Onboarding flag, triggers, pending investigation, and daily report cache were removed. You may see onboarding again; open the report after that to generate a fresh one.',
-        );
+        notify('Memory cleared', "The detective's memory and cached reports were removed. Open the Report tab to generate a fresh one.");
       } catch (e) {
         console.error('[settings] clear report / AI state failed:', e);
-        Alert.alert('Could not clear storage', 'Please try again.');
+        notify('Could not clear storage', 'Please try again.');
       } finally {
         setIsClearingReportCache(false);
       }
@@ -202,7 +104,7 @@ export default function SettingsScreen() {
         >
           <Ionicons name="chevron-back" size={22} color={DARK} />
         </Pressable>
-        <Text style={styles.headerTitle}>SETTINGS</Text>
+        <Text style={styles.headerTitle}>ADVANCED</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -211,64 +113,9 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.card, styles.cardSpacing]}>
-          <Text style={styles.sectionKickerMuted}>AI MEMORY</Text>
+          <Text style={styles.sectionKickerMuted}>REVIEW &amp; RESET</Text>
           <Text style={styles.sectionBody}>
-            Raw AsyncStorage used by the detective (pending investigation, suspects, cached reports). Refresh after
-            generating a report or clearing state.
-          </Text>
-          <Pressable
-            onPress={() => void loadAiMemory()}
-            disabled={loadingMemory}
-            style={({ pressed }) => [
-              styles.secondaryBtn,
-              { opacity: loadingMemory ? 0.6 : pressed ? 0.92 : 1 },
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel="Refresh AI memory from storage"
-          >
-            {loadingMemory ? (
-              <ActivityIndicator size="small" color={DARK} />
-            ) : (
-              <Ionicons name="refresh-outline" size={18} color={DARK} />
-            )}
-            <Text style={styles.secondaryBtnText}>REFRESH</Text>
-          </Pressable>
-
-          {loadingMemory && memoryRows.length === 0 ? (
-            <ActivityIndicator style={{ marginTop: 16 }} color={DARK} />
-          ) : (
-            memoryRows.map((row) => (
-              <View key={row.key} style={styles.memoryCard}>
-                <Text style={styles.memoryKeyLabel} selectable>
-                  {row.key}
-                </Text>
-                {row.kind === 'empty' ? (
-                  <Text style={styles.memoryEmpty}>No data yet</Text>
-                ) : row.kind === 'invalid' ? (
-                  <>
-                    <Text style={styles.memorySummary}>Could not parse as JSON</Text>
-                    <Text style={styles.memoryMono} selectable>
-                      {row.raw}
-                    </Text>
-                  </>
-                ) : (
-                  <>
-                    <Text style={styles.memorySummary}>{row.summary}</Text>
-                    <Text style={styles.memoryMono} selectable>
-                      {row.json}
-                    </Text>
-                  </>
-                )}
-              </View>
-            ))
-          )}
-        </View>
-
-        <View style={[styles.card, styles.cardSpacing]}>
-          <Text style={styles.sectionKickerMuted}>TESTING</Text>
-          <Text style={styles.sectionBody}>
-            Clears onboarding completion, potential triggers, pending investigation, and cached daily AI reports. You
-            may see onboarding again; after that, open the report to fetch a new one.
+            Run the monthly case review, or clear the detective's memory and cached reports to start the case afresh.
           </Text>
           <View style={styles.settingsRow}>
             <View style={styles.settingsRowText}>
@@ -305,14 +152,14 @@ export default function SettingsScreen() {
             accessibilityLabel="Clear report-related AsyncStorage keys for testing"
           >
             <Ionicons name="refresh-outline" size={18} color={DARK} />
-            <Text style={styles.secondaryBtnText}>CLEAR REPORT &amp; AI STATE</Text>
+            <Text style={styles.secondaryBtnText}>CLEAR DETECTIVE MEMORY</Text>
           </Pressable>
         </View>
 
         <View style={styles.card}>
           <Text style={styles.sectionKicker}>DANGER ZONE</Text>
           <Text style={styles.sectionBody}>
-            For testing only. This will wipe everything stored locally and restart the app.
+            This wipes everything stored on this device and starts again.
           </Text>
 
           <Pressable

@@ -100,6 +100,22 @@ export default function DoctorPdfModal({ visible, onClose }: Props) {
       const data = await gatherPdfData(logs, preset.fromIso, preset.toIso);
       const html = buildDoctorPdfHtml(data, patientName.trim() || undefined);
 
+      if (Platform.OS === 'web') {
+        // No file sharing in the browser: print the report from a hidden frame
+        // so the visitor can choose "Save as PDF".
+        const frame = document.createElement('iframe');
+        frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
+        frame.srcdoc = html;
+        frame.onload = () => {
+          frame.contentWindow?.focus();
+          frame.contentWindow?.print();
+          setTimeout(() => frame.remove(), 60000);
+        };
+        document.body.appendChild(frame);
+        setStep('done');
+        return;
+      }
+
       const { uri } = await Print.printToFileAsync({ html, base64: false });
 
       const canShare = await Sharing.isAvailableAsync();

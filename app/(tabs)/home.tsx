@@ -736,7 +736,7 @@ export default function HomeScreen() {
             <Text style={styles.newHeaderGreeting}>{greeting}.</Text>
           </View>
           <Pressable
-            onPress={() => router.push('/settings')}
+            onPress={() => router.push('/user-settings' as never)}
             style={styles.newSettingsBtn}
           >
             <Ionicons name="settings-outline" size={20} color="#64748b" />
@@ -1939,9 +1939,11 @@ const styles = StyleSheet.create({
   tabBarContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    justifyContent: 'space-between',
+    flexGrow: 1,
+    paddingHorizontal: 12,
     paddingVertical: 10,
-    gap: 10,
+    gap: 6,
   },
   tabSeparator: {
     fontFamily: 'Outfit',
@@ -1950,13 +1952,13 @@ const styles = StyleSheet.create({
     lineHeight: 14,
   },
   tabLabel: {
-    fontSize: 13,
-    letterSpacing: 1,
+    fontSize: 12,
+    letterSpacing: 0.4,
   },
   tabLabelActive: {
     fontFamily: 'OutfitBlack',
     color: DARK,
-    fontSize: 13,
+    fontSize: 12,
   },
   tabLabelInactive: {
     fontFamily: 'Outfit',

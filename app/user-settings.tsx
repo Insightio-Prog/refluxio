@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
   Linking,
+  Platform,
   Pressable,
   ScrollView,
   StatusBar,
@@ -16,6 +17,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { confirmDialog } from '@/utils/dialog';
+import { resetApp } from '@/services/storage-service';
 import DoctorPdfModal from '@/components/DoctorPdfModal';
 import { LOGO_FONT_LIGHT, LOGO_FONT_STRONG } from '@/constants/fonts';
 import { APP_RADIUS } from '@/constants/theme';
@@ -122,21 +125,20 @@ export default function UserSettingsScreen() {
   };
 
   const handleClearAllData = () => {
-    Alert.alert(
-      'Clear all data?',
-      'This will permanently remove all logs, settings, and cached reports on this device. This cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Yes, clear everything',
-          style: 'destructive',
-          onPress: () => {
-            void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-            void AsyncStorage.clear();
-          },
-        },
-      ],
-    );
+    confirmDialog({
+      title: 'Clear all data?',
+      message: 'This will permanently remove all logs, settings, and cached reports on this device. This cannot be undone.',
+      confirmLabel: 'Yes, clear everything',
+      destructive: true,
+      onConfirm: () => {
+        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+        void (async () => {
+          await resetApp();
+          if (Platform.OS === 'web') window.location.assign('/');
+          else router.replace('/onboarding-triggers' as never);
+        })();
+      },
+    });
   };
 
   return (
@@ -223,8 +225,16 @@ export default function UserSettingsScreen() {
           <Text style={styles.sectionKicker}>DATA</Text>
           <SettingsRow
             icon="download-outline"
-            label="Generate GP Summary PDF"
+            label="Create Doctor's Report (PDF)"
+            subtitle="A summary of your diary to take to your GP"
             onPress={handleExportPress}
+          />
+          <View style={styles.rowDivider} />
+          <SettingsRow
+            icon="build-outline"
+            label="Advanced"
+            subtitle="Monthly case review, reset detective memory"
+            onPress={() => router.push('/settings' as never)}
           />
           <View style={styles.rowDivider} />
           <SettingsRow

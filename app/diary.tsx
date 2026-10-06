@@ -503,6 +503,7 @@ If you have questions about any entry or need clarification, please ask.`.trim()
         accessibilityRole="button"
         accessibilityLabel="Add note for the Detective"
       >
+        <Ionicons name="create-outline" size={20} color="#fff" />
         <Text style={styles.noteCtaText}>ADD NOTE OR ASK A QUESTION</Text>
       </Pressable>
 
@@ -660,14 +661,16 @@ const styles = StyleSheet.create({
   noteCta: {
     marginHorizontal: 16,
     marginTop: 16,
-    backgroundColor: '#dbe4f0',
+    backgroundColor: '#2d6a4f',
     borderRadius: APP_RADIUS,
     height: 52,
+    flexDirection: 'row',
+    gap: 8,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
   },
-  noteCtaText: { fontFamily: 'OutfitBlack', fontSize: 13, color: '#0f172a', letterSpacing: 1 },
+  noteCtaText: { fontFamily: 'OutfitBlack', fontSize: 13, color: '#fff', letterSpacing: 1 },
   timelineHeader: {
     flexDirection: 'row',
     alignItems: 'center',

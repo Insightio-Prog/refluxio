@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  kicker: { fontFamily: 'OutfitBlack', fontSize: 10, color: '#94a3b8', letterSpacing: 1 },
+  kicker: { fontFamily: 'OutfitBlack', fontSize: 10, color: '#64748b', letterSpacing: 1 },
   headline: { marginTop: 6, fontFamily: 'OutfitBlack', fontSize: 18, color: DARK, letterSpacing: -0.3 },
   closeBtn: {
     width: 34,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   scroll: { marginTop: 12, maxHeight: 520 },
   scrollContent: { paddingBottom: 6 },
-  bodyText: { marginTop: 12, fontFamily: 'OutfitBold', fontSize: 13, color: SLATE, lineHeight: 19 },
+  bodyText: { marginTop: 12, fontFamily: 'LogoOutfit', fontSize: 14, color: '#1e293b', lineHeight: 21 },
   detectiveWrap: { marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: 'rgba(226, 232, 240, 0.7)' },
   detectiveTitle: { fontFamily: 'OutfitBlack', fontSize: 10, color: '#94a3b8', letterSpacing: 1 },
   detectiveLine: { marginTop: 8, fontFamily: 'OutfitBold', fontSize: 11, color: '#64748b', lineHeight: 16 },

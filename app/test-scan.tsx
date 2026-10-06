@@ -1402,12 +1402,12 @@ export default function ScannerScreen() {
           />
           <View style={styles.halfBtnRow}>
             <TouchableOpacity
-              style={[styles.halfBtn, styles.halfBtnGhost, !mealInput.trim() && styles.disabledBtn]}
+              style={[styles.halfBtn, styles.halfBtnPrimary, !mealInput.trim() && styles.disabledBtn]}
               onPress={() => void logManualAsSnack()}
               disabled={!mealInput.trim()}
             >
-              <Ionicons name="fast-food-outline" size={18} color={ICON_COLOR} />
-              <Text style={[styles.halfBtnText, styles.halfBtnTextTight]} numberOfLines={1} adjustsFontSizeToFit>
+              <Ionicons name="fast-food-outline" size={18} color="#fff" />
+              <Text style={[styles.halfBtnText, styles.halfBtnTextTight, styles.halfBtnTextPrimary]} numberOfLines={1} adjustsFontSizeToFit>
                 LOG AS SNACK
               </Text>
             </TouchableOpacity>
@@ -1649,10 +1649,10 @@ export default function ScannerScreen() {
 
 const styles = StyleSheet.create({
   demoScanBox: { borderWidth: 1, borderColor: BORDER, backgroundColor: '#fff', padding: 14, borderRadius: APP_RADIUS },
-  demoScanTitle: { fontSize: 11, letterSpacing: 1.2, fontWeight: '700', color: '#64748b', marginBottom: 6 },
+  demoScanTitle: { fontSize: 11, letterSpacing: 1.2, fontWeight: '700', color: '#475569', marginBottom: 6 },
   demoScanBody: { fontSize: 13, lineHeight: 18, color: '#475569', marginBottom: 10 },
   demoScanRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  demoScanChip: { flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderColor: BORDER, paddingVertical: 8, paddingHorizontal: 12 },
+  demoScanChip: { flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderColor: '#334155', backgroundColor: '#f1f5f9', paddingVertical: 8, paddingHorizontal: 12 },
   demoScanChipText: { fontSize: 13, fontWeight: '600', color: ICON_COLOR },
   safe: { flex: 1, backgroundColor: BG },
   header: {
@@ -1727,13 +1727,13 @@ const styles = StyleSheet.create({
   },
   cameraContainer: { height: 250, borderRadius: APP_RADIUS, overflow: 'hidden' },
   closeCam: { position: 'absolute', top: 15, right: 15 },
-  cardLabel: { fontFamily: 'OutfitBlack', fontSize: 10, color: '#94a3b8', letterSpacing: 1 },
+  cardLabel: { fontFamily: 'OutfitBlack', fontSize: 10, color: '#64748b', letterSpacing: 1 },
   cardLabelCount: {
     fontFamily: 'OutfitMedium',
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#64748b',
   },
-  helperText: { fontFamily: 'OutfitBold', fontSize: 12, color: '#64748b', marginBottom: 10, lineHeight: 18 },
+  helperText: { fontFamily: 'LogoOutfit', fontSize: 13, color: '#475569', marginBottom: 10, lineHeight: 18 },
   manualAddSection: {
     marginHorizontal: 20,
     marginBottom: 20,
@@ -1763,11 +1763,11 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   textInput: {
-    backgroundColor: '#e8edf2',
+    backgroundColor: '#fff',
     borderRadius: APP_RADIUS,
     padding: 14,
-    borderWidth: 1,
-    borderColor: BORDER,
+    borderWidth: 1.5,
+    borderColor: '#94a3b8',
     marginBottom: 0,
     minHeight: 56,
     fontFamily: 'OutfitBold',
@@ -1782,12 +1782,12 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: APP_RADIUS,
     borderWidth: 1,
-    borderColor: '#e8edf2',
-    backgroundColor: '#e8edf2',
+    borderColor: '#334155',
+    backgroundColor: '#fff',
   },
   lineOutlineBtnText: { fontFamily: 'OutfitBlack', fontSize: 12, color: ICON_COLOR, letterSpacing: 0.5 },
-  lineOutlineBtnActive: { backgroundColor: '#dbe4f0', borderColor: '#dbe4f0' },
-  lineOutlineBtnTextActive: { color: '#334155' },
+  lineOutlineBtnActive: { backgroundColor: '#f1f5f9', borderColor: '#0f172a' },
+  lineOutlineBtnTextActive: { color: '#0f172a' },
   halfBtnRow: {
     marginTop: 12,
     marginBottom: 12,
@@ -1804,10 +1804,12 @@ const styles = StyleSheet.create({
     gap: 8,
     borderWidth: 1,
   },
-  halfBtnGhost: { backgroundColor: '#e8edf2', borderColor: '#e8edf2' },
+  halfBtnGhost: { backgroundColor: '#fff', borderColor: '#334155' },
+  halfBtnPrimary: { backgroundColor: '#2d6a4f', borderColor: '#2d6a4f' },
+  halfBtnTextPrimary: { color: '#fff' },
   halfBtnText: { fontFamily: 'OutfitBlack', fontSize: 12, color: ICON_COLOR, letterSpacing: 0.5 },
   halfBtnTextTight: { fontSize: 10, letterSpacing: 0.2 },
-  disabledBtn: { opacity: 0.35 },
+  disabledBtn: { opacity: 0.4 },
   templatesSection: {
     marginTop: 0,
     backgroundColor: '#fff',

@@ -769,7 +769,10 @@ export default function HeatmapScreen() {
                 <View style={styles.verdictsRow}>
                   {confirmedTriggers.length > 0 ? (
                     <View style={styles.verdictsCol}>
-                      <Text style={styles.verdictsColLabel}>⚠️ Confirmed Triggers</Text>
+                      <View style={styles.verdictsColLabelRow}>
+                        <Ionicons name="warning" size={15} color="#d97706" />
+                        <Text style={styles.verdictsColLabel}>Confirmed Triggers</Text>
+                      </View>
                       {confirmedTriggers.map((item) => (
                         <View key={item.id}>
                           <View style={[styles.verdictPill, { backgroundColor: DARK_NAV }]}>
@@ -781,7 +784,10 @@ export default function HeatmapScreen() {
                   ) : null}
                   {confirmedSafe.length > 0 ? (
                     <View style={styles.verdictsCol}>
-                      <Text style={styles.verdictsColLabel}>✅ Confirmed Safe</Text>
+                      <View style={styles.verdictsColLabelRow}>
+                        <Ionicons name="checkmark-circle" size={16} color="#2d6a4f" />
+                        <Text style={styles.verdictsColLabel}>Confirmed Safe</Text>
+                      </View>
                       {confirmedSafe.map((item) => (
                         <View key={item.id}>
                           <View style={[styles.verdictPill, { backgroundColor: RISK_GREEN }]}>
@@ -807,7 +813,8 @@ export default function HeatmapScreen() {
                 {protectiveFactors.map((f) => (
                   <View key={f.id} style={styles.protectiveRow}>
                     <View style={styles.protectivePill}>
-                      <Text style={styles.protectivePillText}>✅ {f.label}</Text>
+                      <Ionicons name="checkmark-circle" size={15} color="#2d6a4f" />
+                      <Text style={styles.protectivePillText}>{f.label}</Text>
                     </View>
                     <Text style={styles.protectiveMeta}>
                       Confirmed {f.monthLabel}
@@ -1994,11 +2001,11 @@ const styles = StyleSheet.create({
   },
   verdictsRow: { flexDirection: 'row', gap: 12 },
   verdictsCol: { flex: 1 },
+  verdictsColLabelRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
   verdictsColLabel: {
     fontFamily: 'OutfitBlack',
     fontSize: 11,
     color: DARK_NAV,
-    marginBottom: 8,
   },
   verdictPill: {
     borderRadius: APP_RADIUS,
@@ -2041,16 +2048,19 @@ const styles = StyleSheet.create({
   },
   protectivePill: {
     borderRadius: APP_RADIUS,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 5,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: 'rgba(45, 106, 79, 0.08)',
     borderWidth: 1,
-    borderColor: '#86efac',
+    borderColor: 'rgba(45, 106, 79, 0.35)',
   },
   protectivePillText: {
     fontFamily: 'OutfitBold',
     fontSize: 11,
-    color: '#166534',
+    color: '#2d6a4f',
   },
   protectiveMeta: {
     fontFamily: 'Outfit',

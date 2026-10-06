@@ -752,10 +752,21 @@ export default function HomeScreen() {
                 <Text style={styles.heroStatusLabel}>{statusCardContent.title.toUpperCase()}</Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
-                <Text style={styles.heroScore}>{statusCardContent.score}</Text>
-                <View style={{ paddingBottom: 12 }}>
-                  <Text style={styles.heroScoreSub}>risk today</Text>
-                </View>
+                {statusCardContent.score === 0 ? (
+                  <>
+                    <Text style={[styles.heroScore, styles.heroScoreClear]}>All clear</Text>
+                    <View style={{ paddingBottom: 12 }}>
+                      <Text style={styles.heroScoreSub}>so far today</Text>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.heroScore}>{statusCardContent.score}</Text>
+                    <View style={{ paddingBottom: 12 }}>
+                      <Text style={styles.heroScoreSub}>risk today</Text>
+                    </View>
+                  </>
+                )}
               </View>
             </View>
           </View>
@@ -1566,7 +1577,7 @@ const styles = StyleSheet.create({
   newHeaderDate: {
     fontFamily: 'OutfitMedium',
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#64748b',
     letterSpacing: 1,
   },
   newHeaderGreeting: {
@@ -1612,7 +1623,7 @@ const styles = StyleSheet.create({
   heroStatusLabel: {
     fontFamily: 'OutfitMedium',
     fontSize: 11,
-    color: '#64748b',
+    color: '#475569',
     letterSpacing: 0.5,
   },
   heroScore: {
@@ -1621,10 +1632,14 @@ const styles = StyleSheet.create({
     color: '#0f172a',
     lineHeight: 68,
   },
+  heroScoreClear: {
+    fontSize: 44,
+    lineHeight: 52,
+  },
   heroScoreSub: {
     fontFamily: 'Outfit',
     fontSize: 13,
-    color: '#94a3b8',
+    color: '#64748b',
     marginTop: -4,
   },
   heroBarChart: {
@@ -1648,7 +1663,7 @@ const styles = StyleSheet.create({
   heroBarLabel: {
     fontFamily: 'OutfitMedium',
     fontSize: 10,
-    color: '#94a3b8',
+    color: '#64748b',
   },
   heroStatsRow: {
     flexDirection: 'row',
@@ -1669,7 +1684,7 @@ const styles = StyleSheet.create({
   heroStatLabel: {
     fontFamily: 'OutfitMedium',
     fontSize: 10,
-    color: '#94a3b8',
+    color: '#64748b',
     letterSpacing: 0.8,
     marginBottom: 4,
   },
@@ -1681,7 +1696,7 @@ const styles = StyleSheet.create({
   heroStatSub: {
     fontFamily: 'Outfit',
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#64748b',
     marginTop: 2,
   },
   yesterdayCard: {
@@ -1701,13 +1716,13 @@ const styles = StyleSheet.create({
     fontFamily: 'OutfitBlack',
     fontSize: 10,
     letterSpacing: 1,
-    color: '#64748b',
+    color: '#475569',
   },
   yesterdayCardBody: {
-    fontFamily: 'OutfitMedium',
+    fontFamily: 'LogoOutfit',
     fontSize: 15,
-    color: '#334155',
-    lineHeight: 22,
+    color: '#1e293b',
+    lineHeight: 23,
   },
   header: {
     backgroundColor: HEADER_DARK,
